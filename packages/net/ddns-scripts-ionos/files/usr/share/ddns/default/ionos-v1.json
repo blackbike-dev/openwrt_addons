@@ -1,0 +1,9 @@
+{
+	"name": "ionos-v1",
+	"ipv4": {
+		"url": "update_ionos_v1.sh"
+	},
+	"ipv6": {
+		"url": "update_ionos_v1.sh"
+	}
+}
