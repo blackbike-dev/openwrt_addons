@@ -1,0 +1,37 @@
+This is a revocation certificate for the OpenPGP key:
+
+pub   rsa4096 2026-03-12 [SCEAR]
+      20A7B813312FFA0C03CD017E9DCFE96218254303
+uid          openwrt-addons packages <openwrt-addons-source@users.noreply.github.com>
+
+A revocation certificate is a kind of "kill switch" to publicly
+declare that a key shall not anymore be used.  It is not possible
+to retract such a revocation certificate once it has been published.
+
+Use it to revoke this key in case of a compromise or loss of
+the secret key.  However, if the secret key is still accessible,
+it is better to generate a new revocation certificate and give
+a reason for the revocation.  For details see the description of
+of the gpg command "--generate-revocation" in the GnuPG manual.
+
+To avoid an accidental use of this file, a colon has been inserted
+before the 5 dashes below.  Remove this colon with a text editor
+before importing and publishing this revocation certificate.
+
+:-----BEGIN PGP PUBLIC KEY BLOCK-----
+Comment: This is a revocation certificate
+
+iQI2BCABCgAgFiEEIKe4EzEv+gwDzQF+nc/pYhglQwMFAmmywMgCHQAACgkQnc/p
+YhglQwPq7w//XFNX5IjUj15P7lg58Oj70UUwx0fIUsRDqpra3QPJIazT8vMurMc1
+4anAf7aVh9m0C0Cbsk8DwCcg0/QhriNjA/CB7HglNcLPxP0bqqFdQXN5vO3RWWRd
+FrQN19zOGglFXPKggmZjg5tfuSfJdf/ycQtXpwv9X5BLWszPLZUNjTpXLuplx0ZQ
+PAeKrHe2hJMzwt7ur57SVU8B2Dm/642d1pc8PX//NwaoeinfuXmTMI11FmD0h9Qc
+NyMsLknWV+10YyypF3+DJuFf/GEjNBL/mTUrFxKJEWZZQEPawcpGBm+S+ljxhCzw
+v7fgwfig5WB/ewrnc7Z+HUMGimzjf6NNY6I/WCiCBD/PtpjJUq6NCD3GvNcF20rY
+1h8mRAA9m3fEfnczauNKbBVJzKth7a7rZC5mt/JLC1O//JzGdseHQqBk6G280WpT
+Ud9UkyDoXXhXj3QrMPPC0hIZZ9FGb7tXkEY0NCN/RmniaU6pjWUTRsULU0yyCanU
+YNp2WUJrATxoHK6BWeNAxGW3EaoaOqhLK5UuxDu/Dx9OBkLqT4hziBHeoQgIqPL/
+4k4ANsCg4xgMr6Xh0vtRRViiq5bf5k7nGVAUrvdenyDAzVDgi7/q0TIu/0ErJHpX
+HpxFbWEz22n3Nx1jkgt56/Ra1hh2XT3LKFwQWiQfKsdptARFi19T9QU=
+=Ais0
+-----END PGP PUBLIC KEY BLOCK-----
