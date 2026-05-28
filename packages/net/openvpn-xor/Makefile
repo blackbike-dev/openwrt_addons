@@ -7,16 +7,21 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=openvpn
+PKG_NAME:=openvpn-xor
+PKG_PARENT:=openvpn
 
 PKG_VERSION:=2.5.8
-PKG_RELEASE:=5
+PKG_RELEASE:=6
 
 PKG_SOURCE_URL:=\
 	https://build.openvpn.net/downloads/releases/ \
 	https://swupdate.openvpn.net/community/releases/
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE:=$(PKG_PARENT)-$(PKG_VERSION).tar.xz
 PKG_HASH:=2bbd0026469902037ee6499b68283d5ab36c74e36cae3112082cfdf6c77a0c57
+#rtsmith134. We probably want to add varient.
+# you must have openvpn-pkg_version at the end or else  tar tryes to unpack it 
+# to the openvpn-xor-2.6.14 dirctory
+PKG_BUILD_DIR:=$(BUILD_DIR)/openvpn-xor/openvpn-$(PKG_VERSION)
 
 PKG_MAINTAINER:=Magnus Kroken <mkroken@gmail.com>
 
@@ -25,42 +30,42 @@ PKG_FIXUP:=autoreconf
 PKG_BUILD_PARALLEL:=1
 PKG_BUILD_FLAGS:=gc-sections
 PKG_LICENSE:=GPL-2.0
-PKG_CPE_ID:=cpe:/a:openvpn:openvpn
+PKG_CPE_ID:=cpe:/a:openvpn-xor:openvpn-xor
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/openvpn/Default
-  TITLE:=Open source VPN solution using $(2)
+define Package/openvpn-xor/Default
+  TITLE:=Open source VPN-XOR solution using $(2)
   SECTION:=net
   CATEGORY:=Network
   URL:=http://openvpn.net
   SUBMENU:=VPN
   MENU:=1
-  DEPENDS:=+kmod-tun +OPENVPN_$(1)_ENABLE_LZO:liblzo +OPENVPN_$(1)_ENABLE_IPROUTE2:ip $(3)
+  DEPENDS:=+kmod-tun +libcap-ng +libopenssl +libnl +libnl-genl +liblz4 +OPENVPN_XOR_$(1)_ENABLE_LZO:liblzo +OPENVPN_XOR_$(1)_ENABLE_IPROUTE2:ip $(3)
   VARIANT:=$(1)
   PROVIDES:=openvpn openvpn-crypto
 endef
 
-Package/openvpn-openssl=$(call Package/openvpn/Default,openssl,OpenSSL,+PACKAGE_openvpn-openssl:libopenssl)
-Package/openvpn-mbedtls=$(call Package/openvpn/Default,mbedtls,mbedTLS,+PACKAGE_openvpn-mbedtls:libmbedtls)
-Package/openvpn-wolfssl=$(call Package/openvpn/Default,wolfssl,WolfSSL \(experimental\),+PACKAGE_openvpn-wolfssl:libwolfssl)
+Package/openvpn-xor-openssl=$(call Package/openvpn-xor/Default,openssl,OpenSSL,+PACKAGE_openvpn-xor-openssl:libopenssl)
+Package/openvpn-xor-mbedtls=$(call Package/openvpn-xor/Default,mbedtls,mbedTLS,+PACKAGE_openvpn-xor-mbedtls:libmbedtls)
+Package/openvpn-xor-wolfssl=$(call Package/openvpn-xor/Default,wolfssl,WolfSSL,+PACKAGE_openvpn-xor-wolfssl:libwolfssl)
 
-define Package/openvpn/config/Default
+define Package/openvpn-xor/config/Default
 	source "$(SOURCE)/Config-$(1).in"
 endef
 
-Package/openvpn-openssl/config=$(call Package/openvpn/config/Default,openssl)
-Package/openvpn-mbedtls/config=$(call Package/openvpn/config/Default,mbedtls)
-Package/openvpn-wolfssl/config=$(call Package/openvpn/config/Default,wolfssl)
+Package/openvpn-xor-openssl/config=$(call Package/openvpn-xor/config/Default,openssl)
+Package/openvpn-xor-mbedtls/config=$(call Package/openvpn-xor/config/Default,mbedtls)
+Package/openvpn-xor-wolfssl/config=$(call Package/openvpn-xor/config/Default,wolfssl)
 
 ifeq ($(BUILD_VARIANT),mbedtls)
-CONFIG_OPENVPN_MBEDTLS:=y
+CONFIG_OPENVPN_XOR_MBEDTLS:=y
 endif
 ifeq ($(BUILD_VARIANT),openssl)
-CONFIG_OPENVPN_OPENSSL:=y
+CONFIG_OPENVPN_XOR_OPENSSL:=y
 endif
 ifeq ($(BUILD_VARIANT),wolfssl)
-CONFIG_OPENVPN_WOLFSSL:=y
+CONFIG_OPENVPN_XOR_WOLFSSL:=y
 endif
 
 CONFIGURE_VARS += \
@@ -69,34 +74,34 @@ CONFIGURE_VARS += \
 
 define Build/Configure
 	$(call Build/Configure/Default, \
-		$(if $(CONFIG_OPENVPN_$(BUILD_VARIANT)_ENABLE_SMALL),--enable-small) \
+		$(if $(CONFIG_OPENVPN_XOR_$(BUILD_VARIANT)_ENABLE_SMALL),--enable-small) \
 		--disable-selinux \
 		--disable-systemd \
 		--disable-plugins \
 		--disable-debug \
 		--disable-pkcs11 \
-		$(if $(CONFIG_OPENVPN_$(BUILD_VARIANT)_ENABLE_LZO),--enable,--disable)-lzo \
-		$(if $(CONFIG_OPENVPN_$(BUILD_VARIANT)_ENABLE_LZ4),--enable,--disable)-lz4 \
-		$(if $(CONFIG_OPENVPN_$(BUILD_VARIANT)_ENABLE_X509_ALT_USERNAME),--enable,--disable)-x509-alt-username \
-		$(if $(CONFIG_OPENVPN_$(BUILD_VARIANT)_ENABLE_MANAGEMENT),--enable,--disable)-management \
-		$(if $(CONFIG_OPENVPN_$(BUILD_VARIANT)_ENABLE_FRAGMENT),--enable,--disable)-fragment \
-		$(if $(CONFIG_OPENVPN_$(BUILD_VARIANT)_ENABLE_MULTIHOME),--enable,--disable)-multihome \
-		$(if $(CONFIG_OPENVPN_$(BUILD_VARIANT)_ENABLE_IPROUTE2),--enable,--disable)-iproute2 \
-		$(if $(CONFIG_OPENVPN_$(BUILD_VARIANT)_ENABLE_DEF_AUTH),--enable,--disable)-def-auth \
-		$(if $(CONFIG_OPENVPN_$(BUILD_VARIANT)_ENABLE_PF),--enable,--disable)-pf \
-		$(if $(CONFIG_OPENVPN_$(BUILD_VARIANT)_ENABLE_PORT_SHARE),--enable,--disable)-port-share \
-		$(if $(CONFIG_OPENVPN_OPENSSL),--with-crypto-library=openssl --with-openssl-engine=no) \
-		$(if $(CONFIG_OPENVPN_MBEDTLS),--with-crypto-library=mbedtls) \
-		$(if $(CONFIG_OPENVPN_WOLFSSL),--with-crypto-library=wolfssl) \
+		$(if $(CONFIG_OPENVPN_XOR_$(BUILD_VARIANT)_ENABLE_LZO),--enable,--disable)-lzo \
+		$(if $(CONFIG_OPENVPN_XOR_$(BUILD_VARIANT)_ENABLE_LZ4),--enable,--disable)-lz4 \
+		$(if $(CONFIG_OPENVPN_XOR_$(BUILD_VARIANT)_ENABLE_X509_ALT_USERNAME),--enable,--disable)-x509-alt-username \
+		$(if $(CONFIG_OPENVPN_XOR_$(BUILD_VARIANT)_ENABLE_MANAGEMENT),--enable,--disable)-management \
+		$(if $(CONFIG_OPENVPN_XOR_$(BUILD_VARIANT)_ENABLE_FRAGMENT),--enable,--disable)-fragment \
+		$(if $(CONFIG_OPENVPN_XOR_$(BUILD_VARIANT)_ENABLE_MULTIHOME),--enable,--disable)-multihome \
+		$(if $(CONFIG_OPENVPN_XOR_$(BUILD_VARIANT)_ENABLE_IPROUTE2),--enable,--disable)-iproute2 \
+		$(if $(CONFIG_OPENVPN_XOR_$(BUILD_VARIANT)_ENABLE_DEF_AUTH),--enable,--disable)-def-auth \
+		$(if $(CONFIG_OPENVPN_XOR_$(BUILD_VARIANT)_ENABLE_PF),--enable,--disable)-pf \
+		$(if $(CONFIG_OPENVPN_XOR_$(BUILD_VARIANT)_ENABLE_PORT_SHARE),--enable,--disable)-port-share \
+		$(if $(CONFIG_OPENVPN_XOR_OPENSSL),--with-crypto-library=openssl --with-openssl-engine=no) \
+		$(if $(CONFIG_OPENVPN_XOR_MBEDTLS),--with-crypto-library=mbedtls) \
+		$(if $(CONFIG_OPENVPN_XOR_WOLFSSL),--with-crypto-library=wolfssl) \
 	)
 endef
 
-define Package/openvpn-$(BUILD_VARIANT)/conffiles
+define Package/openvpn-xor-$(BUILD_VARIANT)/conffiles
 /etc/config/openvpn
 /etc/openvpn.user
 endef
 
-define Package/openvpn-$(BUILD_VARIANT)/install
+define Package/openvpn-xor-$(BUILD_VARIANT)/install
 	$(INSTALL_DIR) \
 		$(1)/usr/sbin \
 		$(1)/usr/share/openvpn \
@@ -144,6 +149,6 @@ define Package/openvpn-$(BUILD_VARIANT)/install
 		$(1)/lib/upgrade/keep.d/openvpn
 endef
 
-$(eval $(call BuildPackage,openvpn-openssl))
-$(eval $(call BuildPackage,openvpn-mbedtls))
-$(eval $(call BuildPackage,openvpn-wolfssl))
+$(eval $(call BuildPackage,openvpn-xor-openssl))
+$(eval $(call BuildPackage,openvpn-xor-mbedtls))
+$(eval $(call BuildPackage,openvpn-xor-wolfssl))
