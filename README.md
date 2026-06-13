@@ -173,3 +173,6 @@ git subtree add --prefix applications/luci-app-bandix     https://github.com/tim
 git subtree add --prefix packages/openwrt-bandix          https://github.com/timsaya/openwrt-bandix.git       main   --squash <br>
 git subtree add --prefix packages/openwrt-bandix-plus     https://github.com/timsaya/openwrt-bandix-plus.git  main   --squash <br>
 git subtree add --prefix applications/luci-app-bandix-plus     https://github.com/timsaya/luci-app-bandix-plus.git      main   --squash
+
+git subtree add --prefix luci/themes/luci-theme-argon https://github.com/jerrykuku/luci-theme-argon.git v2.4.3 --squash
+git subtree add --prefix luci/applications/luci-app-argon-config https://github.com/jerrykuku/luci-app-argon-config.git  master --squash
