@@ -169,3 +169,7 @@ git subtree add --prefix applications/luci-app-interfaces-statistics    https://
 git subtree add --prefix applications/luci-app-cpu-perf   https://github.com/gSpotx2f/luci-app-cpu-perf.git   master --squash
 git subtree add --prefix applications/luci-app-cpu-status https://github.com/gSpotx2f/luci-app-cpu-status.git master --squash
 git subtree add --prefix applications/luci-app-bandix     https://github.com/timsaya/luci-app-bandix.git      main   --squash
+### Added May 31, 2026
+git subtree add --prefix packages/openwrt-bandix          https://github.com/timsaya/openwrt-bandix.git       main   --squash <br>
+git subtree add --prefix packages/openwrt-bandix-plus     https://github.com/timsaya/openwrt-bandix-plus.git  main   --squash <br>
+git subtree add --prefix applications/luci-app-bandix-plus     https://github.com/timsaya/luci-app-bandix-plus.git      main   --squash

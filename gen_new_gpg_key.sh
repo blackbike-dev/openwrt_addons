@@ -1,12 +1,15 @@
 #!/bin/bash
 PWSIZE=16
 PW=$(echo $(cat /dev/urandom 2>/dev/null | head -n 8 | md5sum | cut -c 1-${PWSIZE}))
+# PW="my_specific_pw"
 FINGERPRINT=
 KEYSIZE=4096
 EXPIRE=0
-NAME="openwrt-addons packages"
-MAIL="openwrt-addons-source@users.noreply.github.com"
+NAME="github.com/blackbike-dev/openwrt_addons"
+MAIL="rtsmith771@gmail.com"
 #
+mkdir -p keys/gpg
+
 out=$(gpg --full-gen-key --batch <(echo "Key-Type: 1"; \
                                    echo "Key-Length: ${KEYSIZE}"; \
                                    echo "Subkey-Type: 1"; \
