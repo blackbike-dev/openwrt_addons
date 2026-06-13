@@ -11,8 +11,22 @@
 3. exec `gen_new_gpg_key.sh` generate gpg key for yourself
    + `./keys/gpg/*.finger`
    + `./keys/gpg/*.pub`
-   + `./keys/gpg/*.rev`
-   + `./keys/gpg/*.sec`
+   + `./keys/gpg/*.rev`      revocation certificate.
+   + `./keys/gpg/*.sec`      Secret gpg key (do not push this file. It is a secret)
+   + `./keys/gpg/*.pw `      Secret gpg key (do not push this file. It is a secret)
+
+4. You could save the secret usign and gpg files in github action secrets but then they are no longer viewable.
+   If you would like to see the plaintext again then you can install git-secret from https://github.com/sobolevn/git-secret.git.
+   Documentation at https://sobolevn.me/git-secret/
+
+   run "git secret init" to create .secret folder and initial git repository
+   a) Add the first user to the git-secret repo keyring by running git secret tell your@email.id.
+   b) git secret add keys/usign/*.sec
+   c) git secret add keys/gpg/*.sec
+   d) git secret add keys/gpg/*.pw
+   e) git secret hide     #use to hide the files
+   f) add and commit the changes.
+   g) later use git secret reveal   # use to reveal the secrets
 
 If you are debugging with ACT. (https://github.com/nektos/act)  then execute steps 6 and 7.
 If you are running on github with actions the execute 3 and 4 then skip to step 8
