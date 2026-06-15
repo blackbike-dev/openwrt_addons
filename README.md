@@ -107,8 +107,8 @@ make menuconfig
 
 --------
 
-[fantastic-keyring]: https://github.com/fantastic-packages/fantastic-keyring
-[fantastic-packages-feeds]: https://github.com/fantastic-packages/fantastic-packages-feeds
+[openwrt-keyring]: https://github.com/fantastic-packages/fantastic-keyring
+[openwrt-packages-feeds]: https://github.com/fantastic-packages/fantastic-packages-feeds
 [luci-app-alwaysonline]: https://github.com/muink/luci-app-alwaysonline
 [luci-app-bandix]: https://github.com/timsaya/luci-app-bandix
 [luci-app-change-mac]: https://github.com/muink/luci-app-change-mac
@@ -158,21 +158,29 @@ make menuconfig
 [openwrt-stuntman]: https://github.com/muink/openwrt-stuntman
 [openwrt-Toolkit]: https://github.com/muink/openwrt-Toolkit
 
-Added May 27, 2026
-packages/openvpn
-packages/ddns-scripts-ionos
-packages/acme-acmesh
-git subtree add --prefix applications/luci-app-temp-status   https://github.com/gSpotx2f/luci-app-temp-status.git   master --squash
-git subtree add --prefix applications/luci-app-log           https://github.com/gSpotx2f/luci-app-log.git           master --squash
-git subtree add --prefix applications/luci-app-internet-detector        https://github.com/gSpotx2f/luci-app-internet-detector.git        master --squash
-git subtree add --prefix applications/luci-app-interfaces-statistics    https://github.com/gSpotx2f/luci-app-interfaces-statistics.git    master --squash
-git subtree add --prefix applications/luci-app-cpu-perf   https://github.com/gSpotx2f/luci-app-cpu-perf.git   master --squash
-git subtree add --prefix applications/luci-app-cpu-status https://github.com/gSpotx2f/luci-app-cpu-status.git master --squash
-git subtree add --prefix applications/luci-app-bandix     https://github.com/timsaya/luci-app-bandix.git      main   --squash
+### Added May 27, 2026
+added packages/openvpn <br>
+added packages/ddns-scripts-ionos <br>
+added packages/acme-acmesh <br>
+git subtree add --prefix applications/luci-app-temp-status   https://github.com/gSpotx2f/luci-app-temp-status.git   master --squash <br>
+git subtree add --prefix applications/luci-app-log           https://github.com/gSpotx2f/luci-app-log.git           master --squash <br>
+git subtree add --prefix applications/luci-app-internet-detector        https://github.com/gSpotx2f/luci-app-internet-detector.git        master --squash <br>
+git subtree add --prefix applications/luci-app-interfaces-statistics    https://github.com/gSpotx2f/luci-app-interfaces-statistics.git    master --squash <br>
+git subtree add --prefix applications/luci-app-cpu-perf   https://github.com/gSpotx2f/luci-app-cpu-perf.git   master --squash <br>
+git subtree add --prefix applications/luci-app-cpu-status https://github.com/gSpotx2f/luci-app-cpu-status.git master --squash <br>
+git subtree add --prefix applications/luci-app-bandix     https://github.com/timsaya/luci-app-bandix.git      main   --squash <br>
 ### Added May 31, 2026
 git subtree add --prefix packages/openwrt-bandix          https://github.com/timsaya/openwrt-bandix.git       main   --squash <br>
 git subtree add --prefix packages/openwrt-bandix-plus     https://github.com/timsaya/openwrt-bandix-plus.git  main   --squash <br>
 git subtree add --prefix applications/luci-app-bandix-plus     https://github.com/timsaya/luci-app-bandix-plus.git      main   --squash
-
-git subtree add --prefix luci/themes/luci-theme-argon https://github.com/jerrykuku/luci-theme-argon.git v2.4.3 --squash
+### Added June 13, 2026
+git subtree add --prefix luci/themes/luci-theme-argon https://github.com/jerrykuku/luci-theme-argon.git v2.4.3 --squash <br>
 git subtree add --prefix luci/applications/luci-app-argon-config https://github.com/jerrykuku/luci-app-argon-config.git  master --squash
+### Added June 15, 2026
+git subtree add --prefix packages/qca8k_reg_reader        https://github.com/adron-s/qca8k_reg_reader.git   master   --squash <br>
+git subtree add --prefix packages/fantastic-keyring       https://github.com/fantastic-packages/fantastic-keyring.git   24.10    --squash #for 23.05 and 24.10 <br>
+git subtree add --prefix packages/fantastic-keyring       https://github.com/fantastic-packages/fantastic-keyring.git   24.10    --squash #for 25.12 <br>
+git subtree add --prefix packages/fantastic-keyring       https://github.com/fantastic-packages/fantastic-packages-feeds.git   24.10    --squash #for 23.05 and 24.10 <br>
+
+
+
