@@ -6,7 +6,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=openwrt-packages-feeds
-PKG_VERSION:=20250513
+PKG_VERSION:=20251229
 PKG_RELEASE:=1
 
 # PKG_MAINTAINER:=Anya Lin <hukk1996@gmail.com>
@@ -21,7 +21,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/$(PKG_NAME)
   SECTION:=base
   CATEGORY:=Base system
-  DEPENDS:=+openwrt-keyring +opkg
+  DEPENDS:=+openwrt-keyring
   TITLE:=Installer for openwrt-packages feeds
   PKGARCH:=all
 endef
@@ -40,8 +40,9 @@ if [ -n "$$IPKG_INSTROOT" ]; then
 	eval "$$(grep CONFIG_VERSION_NUMBER "$$TOPDIR/.config")"
 	eval "$$(grep CONFIG_VERSION_REPO "$$TOPDIR/.config")"
 	eval "$$(grep CONFIG_TARGET_ARCH_PACKAGES "$$TOPDIR/.config")"
-	REVISION=$$($$TOPDIR/scripts/getver.sh)
-	REVISION=$${REVISION:1:5}
+	#REVISION=$$($$TOPDIR/scripts/getver.sh | cut -f1 -d'-' | sed 's|[a-z]||gi')
+	eval "$$(grep BUILD_ID "$$IPKG_INSTROOT/usr/lib/os-release")"
+	REVISION=$$(echo "$$BUILD_ID" | cut -f1 -d'-' | sed 's|[a-z]||gi')
 	if [ -n "$$CONFIG_VERSION_REPO" ]; then
 		VERSION_NUMBER=$${CONFIG_VERSION_REPO##*/}
 	else
@@ -50,30 +51,28 @@ if [ -n "$$IPKG_INSTROOT" ]; then
 	ARCH_PACKAGES=$$CONFIG_TARGET_ARCH_PACKAGES
 else
 	# system
-	eval "$$(grep VERSION /etc/os-release)"
-	eval "$$(grep BUILD_ID /etc/os-release)"
 	eval "$$(grep OPENWRT_ARCH /etc/os-release)"
-	REVISION=$${BUILD_ID:1:5}
-	VERSION_NUMBER=$$VERSION
 	ARCH_PACKAGES=$$OPENWRT_ARCH
+	REVISION=$$(ubus call system board | jsonfilter -qe '@.release.revision' | cut -f1 -d'-' | sed 's|[a-z]||gi')
+	VERSION_NUMBER=$$(ubus call system board | jsonfilter -qe '@.release.version')
 fi
 if [ "$$VERSION_NUMBER" = "SNAPSHOT" ]; then
-	BRANCH="24.10"
-	[ "$$REVISION" -lt 28158 ] && BRANCH="23.05"
-	[ "$$REVISION" -lt 23069 ] && BRANCH="22.03"
-	[ "$$REVISION" -lt 19302 ] && BRANCH="21.02"
+	if   [ "$$REVISION" -ge 32353 -o "$$REVISION" -eq 0 ]; then BRANCH="25.12"
+	else 2>&1 echo "Current version of OpenWrt is no longer supported, please upgrade!"; exit 1;
+	fi
 	# https://archive.openwrt.org/releases/**/version.buildinfo
-
+	# r32353-9e9b05130c    25.12.0-rc1
+	# r28158-d276b4c91a    24.10.0-rc1
 else
 	BRANCH=$$(echo $$VERSION_NUMBER | awk -F '.' -v OFS='.' '{print $$1,$$2}')
 fi
-if ! grep -q fantastic_packages_ "$$IPKG_INSTROOT/etc/opkg/customfeeds.conf"; then
-	BASE_URL="http://openwrt_addons.home/releases"
+BASE_URL="http://openwrt_addons.home/releases"
+if ! grep -q "$$BASE_URL" "$$IPKG_INSTROOT/etc/apk/repositories.d/customfeeds.list"; then
 	BASE_URL="$$BASE_URL/$$BRANCH/packages/$$ARCH_PACKAGES"
-	cat <<- EOF >> "$$IPKG_INSTROOT/etc/opkg/customfeeds.conf"
-	src/gz openwrt_packages_packages $$BASE_URL/packages
-	src/gz openwrt_packages_luci     $$BASE_URL/luci
-	src/gz openwrt_packages_special  $$BASE_URL/special
+	cat <<- EOF >> "$$IPKG_INSTROOT/etc/apk/repositories.d/customfeeds.list"
+	$$BASE_URL/packages/packages.adb
+	$$BASE_URL/luci/packages.adb
+	$$BASE_URL/special/packages.adb
 	EOF
 fi
 exit 0
@@ -81,7 +80,8 @@ endef
 
 define Package/$(PKG_NAME)/prerm
 #!/bin/sh
-sed -i "/openwrt_packages_/d" "$$IPKG_INSTROOT/etc/opkg/customfeeds.conf"
+BASE_URL="http://openwrt_addons.home/releases"
+sed -i "/$$BASE_URL/d" "$$IPKG_INSTROOT/etc/apk/repositories.d/customfeeds.list"
 exit 0
 endef
 
