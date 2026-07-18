@@ -33,7 +33,7 @@ Build/Compile=
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/opkg/keys/
-	$(INSTALL_DATA) $(CURDIR)/usign/870A1D7EB2240B92 $(1)/etc/opkg/keys/
+	$(INSTALL_DATA) $(CURDIR)/usign/53ff2b6672243d28 $(1)/etc/opkg/keys/
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
